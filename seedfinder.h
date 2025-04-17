@@ -11,7 +11,7 @@
 
 // a single search constraint
 struct BiomeConstraint {
-  string biomeName;
+  int BiomeID;
   int maxDistance = 500;
 };
 
