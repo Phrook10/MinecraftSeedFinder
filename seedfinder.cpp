@@ -13,6 +13,7 @@ bool seedMeetsConstraints(Generator& g, const SearchOptions& options, uint64_t s
 		int scale = 1;
 		bool found = false;
 
+    // moves through the world, and seeks a specific biome within the constraints. should ultimately me a spiral trajectory.
 		for (int x = -maxDist; x <= maxDist; x += coordinateIncrement) {
 			for (int z = -maxDist; z <= maxDist; z += coordinateIncrement) {
 				int currentBiomeID = getBiomeAt(&g, scale, x, yCoord, z);
@@ -48,5 +49,5 @@ uint64_t findMatchingSeed(const SearchOptions& options) {
   }
   // if no matching seed is found in range
   printf("no matching seed was found in the range of %" PRId64 " to %" PRId64 ".\n", (int64_t)startSeed, (int64_t)(startSeed + seedsToCount));
-  return 0;
+  return UINT64_MAX;
 };
