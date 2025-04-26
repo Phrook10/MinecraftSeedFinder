@@ -1,4 +1,5 @@
 #include "seedfinder.h"
+#include "interface.h"
 
 
 // given a specific seed, generator, and options, return true if the seed meets all the biome constraints
@@ -40,14 +41,19 @@ uint64_t findMatchingSeed(const SearchOptions& options) {
   uint64_t startSeed = options.startSeed;
   uint64_t seedsToCount = options.seedsToCount;
 
+	hideCursor();																																
   for (uint64_t seed = startSeed; seed < startSeed + seedsToCount; ++seed) {
     Generator g;
+		uint64_t seedsChecked = (seed + 1) - startSeed;
+		printProgressBar(seedsChecked, seedsToCount);
     if (seedMeetsConstraints(g, options, seed)) {
+			showCursor();
       printf("Seed %" PRId64 " matches all constraints. \n", (int64_t)seed);
       return seed; 
     }
   }
   // if no matching seed is found in range
-  printf("no matching seed was found in the range of %" PRId64 " to %" PRId64 ".\n", (int64_t)startSeed, (int64_t)(startSeed + seedsToCount));
+	showCursor();
+  printf("\nNo matching seed was found in the range of %" PRId64 " to %" PRId64 ".\n", (int64_t)startSeed, (int64_t)(startSeed + seedsToCount));
   return UINT64_MAX;
 };

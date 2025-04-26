@@ -28,4 +28,9 @@ struct SearchOptions {
 bool seedMeetsConstraints(const Generator& g, const SearchOptions& options, uint64_t seed);     // given a specific seed, generator, and options, return true if the seed meets all the biome constraints
 uint64_t findMatchingSeed(const SearchOptions& options);                                        // loops through a range of seeds starting from startSeed, checks each seed againts the constraints, and returns the first one that matches
 
+// getters
+const SearchOptions& getSearchOptions();
+
+
+
 #endif

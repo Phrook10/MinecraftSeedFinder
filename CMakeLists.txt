@@ -6,6 +6,10 @@ project(MinecraftSeedFinder)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+
+# Tell CMake to build cubiomes as static lib
+set(BUILD_SHARED_LIBS OFF)
+
 # Include the cubiomes directory
 add_subdirectory(cubiomes)
 
@@ -16,11 +20,11 @@ include_directories(
 )
 
 # Add the source files for the project (main.cpp, seedfinder.cpp, etc.)
-add_executable(seedfinder main.cpp seedfinder.cpp)
+add_executable(seedfinder main.cpp config.cpp seedfinder.cpp interface.cpp)
 
 # Link the cubiomes library with your project
 target_link_libraries(seedfinder PRIVATE cubiomes)
 
 
-# Link the static library to your project
-target_link_libraries(seedfinder PRIVATE cubiomes_static)
+# # Link the static library to your project
+# target_link_libraries(seedfinder PRIVATE cubiomes_static)
