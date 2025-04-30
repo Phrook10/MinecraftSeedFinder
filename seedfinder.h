@@ -18,7 +18,7 @@ struct BiomeConstraint {
 // groups all constraints and options together
 struct SearchOptions {
   uint64_t startSeed = 0;
-  uint64_t seedsToCount = 10000;
+  uint64_t seedsToCount = 1000;
   bool randomizeStartSeed = false;
   std::vector<BiomeConstraint> constraints;
 };

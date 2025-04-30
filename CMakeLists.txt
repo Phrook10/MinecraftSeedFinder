@@ -23,8 +23,8 @@ include_directories(
 add_executable(seedfinder main.cpp config.cpp seedfinder.cpp interface.cpp)
 
 # Link the cubiomes library with your project
-target_link_libraries(seedfinder PRIVATE cubiomes)
+#target_link_libraries(seedfinder PRIVATE cubiomes)
 
 
-# # Link the static library to your project
-# target_link_libraries(seedfinder PRIVATE cubiomes_static)
+# Link the static library to your project
+target_link_libraries(seedfinder PRIVATE cubiomes_static)
