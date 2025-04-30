@@ -40,6 +40,16 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [0.1.1] - 2025-04-25
+
+### Added
+- Refactored the I/O to an interface module
+
+## [0.1.2] - 2025-04-30
+- Added input validation
+- Added default inputs (user can press enter to accept a defult value)
+- Implemented a progress bar
+
 <!-- TEMPLATE FOR FUTURE VERSIONS
 
 ## [X.Y.Z] – YYYY-MM-DD
