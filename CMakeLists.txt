@@ -20,7 +20,7 @@ include_directories(
 )
 
 # Add the source files for the project (main.cpp, seedfinder.cpp, etc.)
-add_executable(seedfinder main.cpp config.cpp seedfinder.cpp interface.cpp)
+add_executable(seedfinder main.cpp config.cpp seedfinder.cpp interface.cpp biomecache.cpp)
 
 # Link the cubiomes library with your project
 #target_link_libraries(seedfinder PRIVATE cubiomes)

@@ -150,3 +150,26 @@ const std::unordered_map<std::string, BiomeID>& getBiomeNameToID() {
   };
   return map;
 }
+
+MCVersion parseMCVersion(const std::string& versionStr) {
+	static const std::unordered_map<std::string, MCVersion> versionMap = {
+		{"MC_1_0_0", MC_1_0_0}, {"MC_1_1_0", MC_1_1_0}, {"MC_1_2_5", MC_1_2_5},
+		{"MC_1_3_2", MC_1_3_2}, {"MC_1_4_7", MC_1_4_7}, {"MC_1_5_2", MC_1_5_2},
+		{"MC_1_6_4", MC_1_6_4}, {"MC_1_7_10", MC_1_7_10}, {"MC_1_8_9", MC_1_8_9},
+		{"MC_1_9_4", MC_1_9_4}, {"MC_1_10_2", MC_1_10_2}, {"MC_1_11_2", MC_1_11_2},
+		{"MC_1_12_2", MC_1_12_2}, {"MC_1_13_2", MC_1_13_2}, {"MC_1_14_4", MC_1_14_4},
+		{"MC_1_15_2", MC_1_15_2}, {"MC_1_16_1", MC_1_16_1}, {"MC_1_16_5", MC_1_16_5},
+		{"MC_1_17_1", MC_1_17_1}, {"MC_1_18_2", MC_1_18_2}, {"MC_1_19_2", MC_1_19_2},
+		{"MC_1_19_4", MC_1_19_4}, {"MC_1_20_6", MC_1_20_6}, {"MC_1_21_1", MC_1_21_1},
+		{"MC_1_21_3", MC_1_21_3}, {"MC_1_21_WD", MC_1_21_WD}, {"MC_1_21", MC_1_21},
+		{"MC_NEWEST", MC_NEWEST}
+	};
+
+	auto it = versionMap.find(versionStr);
+	if (it != versionMap.end()) {
+		return it->second;
+	}
+
+	std::cerr << "Unknown Minecraft version: " << versionStr << std::endl;
+	exit(EXIT_FAILURE);
+}

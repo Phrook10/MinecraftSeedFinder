@@ -43,12 +43,32 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [0.1.1] - 2025-04-25
 
 ### Added
-- Refactored the I/O to an interface module
+- Refactored the I/O to an interface module.
 
 ## [0.1.2] - 2025-04-30
-- Added input validation
-- Added default inputs (user can press enter to accept a defult value)
-- Implemented a progress bar
+
+### Added
+- Added input validation.
+- Added default inputs (user can press enter to accept a defult value).
+- Implemented a progress bar.
+
+## [0.1.2] - 2025-04-30
+
+### Added
+- Added command line argument that allows for the selection of a specific version of minecraft. (Default is MC_NEWEST).
+
+### Changed
+- Search logic has been modified to make searching faster.
+- Updated the readme
+
+### Fixed
+- Corrected the search algorithm, it now searches in a spiral pattern extending outwards from (0,0).
+
+
+
+
+
+
 
 <!-- TEMPLATE FOR FUTURE VERSIONS
 

@@ -16,15 +16,26 @@
 #include "cubiomes/generator.h"
 
 
-int main() {
+int main(int argc, char* argv[]) {
 
+	MCVersion version = MC_NEWEST;
+
+	// Simple argument parser
+	for (int i = 1; i < argc; ++i) {
+		std::string arg = argv[i];
+		if ((arg == "-v" || arg == "--version") && i + 1 < argc) {
+			version = parseMCVersion(argv[i + 1]);
+			++i;
+		}
+	}
+	
   std::cout << "In the program\n";
   std::cout << "Minecraft Seed Finder\n";
 
 
   SearchOptions userInput = getInputFromUser();
 	std::cout << "Searching Seeds";
-	uint64_t result = findMatchingSeed(userInput);
+	uint64_t result = findMatchingSeed(userInput, version);
 
 	if (result != UINT64_MAX) {
 		std::cout << "Matching seed found: " << result << "\n";
