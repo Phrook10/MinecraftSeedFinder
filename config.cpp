@@ -171,5 +171,16 @@ MCVersion parseMCVersion(const std::string& versionStr) {
 	}
 
 	std::cerr << "Unknown Minecraft version: " << versionStr << std::endl;
-	exit(EXIT_FAILURE);
+	return MC_NEWEST;
+}
+
+int getAvailableCores() {
+
+  int numCores = std::thread::hardware_concurrency();
+
+  // if hardware_concurrency() returns 0 (failed to detect), default to 1 core
+  if (numCores == 0) {
+    numCores = 1;
+  }
+  return numCores;
 }

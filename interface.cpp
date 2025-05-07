@@ -16,7 +16,7 @@ static bool validateUserSeed(const std::string& input, int64_t& result) {
 	std::istringstream iss(input);
 	iss >> result;
 
-	// fail is stream didn't get through the whole string, or there is any error
+	// fail if stream didn't get through the whole string, or there is any error
 	return !iss.fail() && iss.eof();
 }
 
@@ -32,7 +32,7 @@ static uint64_t getSeedFromUser(uint64_t defaultSeed) {
 			return defaultSeed;
 		} 
 		else if (validateUserSeed(userInput, signedSeed)) {
-			break;																																											// good input
+			break;																																											
 		} else {
 			std::cout << "Invalid input. please enter a valid integer\n";
 		}
@@ -53,7 +53,7 @@ static uint64_t getSeedRangeFromUser(uint64_t defaultSeedRange) {
 			return defaultSeedRange;
 		}
 		else if (validateUserSeed(userInput, signedSeedRange)) {
-			break;																																											// good input
+			break;																																											
 		} else {
 			std::cout << "Invalid input. please enter a valid integer\n";
 		}
@@ -149,11 +149,13 @@ void printProgressBar(long long current, long long total) {
 	const int barWidth = 50;
 	float progress = static_cast<float>(current) / total;
 	int pos = static_cast<int>(barWidth * progress);
-  
+
+	// UTF-8 Full block character
+	std::string fullBlock = u8"\u2588";
+
 	std::cout << "\r[";
 	for (int i = 0; i < barWidth; ++i) {
-		if (i < pos) std::cout << "#";
-		else if (i == pos) std::cout << ">";
+		if (i < pos) std::cout << fullBlock;
 		else std::cout << " ";
 	}
 	std::cout << "] "

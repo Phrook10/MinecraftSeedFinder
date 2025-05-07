@@ -4,33 +4,14 @@ A command-line tool for brute-force analyzing Minecraft world seeds using biome 
 
 ---
 
-## Example Usage
-
-```
-Minecraft Biome Finder
-
-Enter starting seed (default = 0): 123456
-Enter seed range (default = 50000): 50000
-
-Enter a biome ID (or type 'done' to finish): jungle
-Enter max distance for this biome: 5000
-Biome constraint added: jungle with max distance 5000 from origin
-
-Searching...
-Seed 123498 meets all biome constraints.
-```
-
----
-
 ## Features
 
 - Search Minecraft world seeds by biome proximity to (0, 0)
 - Specify starting seed and range
 - Fast native performance via C++ and Cubiomes
-- Support for common biome names (mapped in `config.h`)
+- Support for common biome names
 - Minecraft version selection via command-line
-- Modular architecture for future expansion
-- Planned GUI in future releases
+- Multithreaded search
 
 ---
 
@@ -42,12 +23,11 @@ You can choose which Minecraft version's world generation rules to use by supply
 ./seedfinder.exe -v MC_1_20_6
 ```
 
-If no version is supplied, the latest available (`MC_1_21_WD`) will be used by default.
+If no version is supplied, the latest available (`MC_NEWEST`) will be used by default.
 
 **Supported versions:**
 
-- MC_B1_7  
-- MC_B1_8  
+
 - MC_1_0_0  
 - MC_1_1_0  
 - MC_1_2_5  
@@ -73,11 +53,16 @@ If no version is supplied, the latest available (`MC_1_21_WD`) will be used by d
 - MC_1_20_6  
 - MC_1_21_1  
 - MC_1_21_3  
-- MC_1_21_WD
-
-*Note: Only the latest patch of each major version is officially supported.*
-
+- MC_NEWEST
 ---
+
+## Multithreading
+
+If `hardware_concurrency()` has trouble detecting a core count, it can be specified manually bby using the `-t` flag when launching the program:
+
+```
+./seedfinder.exe -t 8
+```
 
 ## Project Structure
 
@@ -88,6 +73,9 @@ If no version is supplied, the latest available (`MC_1_21_WD`) will be used by d
 ├── config.h               # Biome ID mappings and constants
 ├── seedfinder.h/.cpp      # Core biome constraint logic
 ├── interface.h/.cpp       # User interface & input/output logic
+├── config.h/.cpp          # Configuration and Enums
+├── biomecache.h/.cpp      # Contains logic for caching the seed data
+├── multithreading.h/.cpp  # Contains multithreading controls
 └── cubiomes/              # External biome generation engine
 ```
 
@@ -106,25 +94,24 @@ This project uses CMake to build with MinGW on Windows.
 
 1. Create a build directory:
 
-   ```
-   mkdir build
-   cd build
-   ```
+   mkdir build  
+   cd build  
 
-2. Generate Makefiles using the MinGW generator:
+2. Build the Cubiomes library:
 
-   ```
-   cmake .. -G "MinGW Makefiles" ..
-   ```
+   cd ../cubiomes  
+   mingw32-make  
+   cd ../build  
 
-3. Build the project:
+3. Generate Makefiles using the MinGW generator:
 
-   ```
-   mingw32-make
-   ```
+   cmake .. -G "MinGW Makefiles"  
+
+4. Build the main project:
+
+   mingw32-make  
 
    The executable (e.g., `seedfinder.exe`) will be created in the `build/` directory.
-
 ---
 
 ## Running the Program
@@ -140,6 +127,7 @@ Optional:
 
 ```
 ./seedfinder.exe -v MC_1_20_6
+./seedfinder.exe -t n (n = number of cores you want to run concurrently)
 ```
 
 ---
@@ -206,9 +194,16 @@ Searching with a seed range of 50,000 may take a few seconds to a couple of minu
 
 ---
 
+## Other Notes
+
+If your progress bar looks like this: 
+```[ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓ]```
+ you need to make sure your terminal is using UTF-8
+
+---
+
 ## Future Plans
 
-- Multi-threaded scanning
 - Configurable search coordinates
 - Exportable search results
 - GUI frontend with seed map visualization

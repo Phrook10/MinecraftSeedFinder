@@ -1,6 +1,7 @@
 #include "seedfinder.h"
 #include "interface.h"
 #include "biomecache.h"
+#include <thread>
 #include <unordered_map>
 #include <unordered_set>
 
@@ -122,4 +123,84 @@ std::vector<std::pair<int, int>> generateSpiralCoords(int maxDist, int step) {
 	}
 
 	return coords;
+}
+
+
+//multithread specific functions
+void seedSearchWorker(uint64_t startSeed, uint64_t endSeed, const SearchOptions& options, 
+	MCVersion version, ThreadSearchData* sharedData) {
+// Create a generator instance for this thread
+Generator g;
+setupGenerator(&g, version, 0);
+
+// Iterate through seed range assigned to this thread
+for (uint64_t seed = startSeed; seed < endSeed; seed++) {
+// Check if another thread found a seed already
+if (sharedData->seedFound) {
+break;
+}
+
+// Check if this seed meets all constraints
+if (seedMeetsConstraints(g, options, seed)) {
+// Set the found seed and notify other threads
+sharedData->foundSeed = seed;
+sharedData->seedFound = true;
+break;
+}
+
+// Increment the counter of seeds checked
+sharedData->seedsChecked++;
+
+// Update progress every 1000 seeds
+if (seed % 1000 == 0) {
+std::lock_guard<std::mutex> lock(sharedData->progressMutex);
+printProgressBar(sharedData->seedsChecked, options.seedsToCount);
+}
+}
+}
+
+uint64_t findMatchingSeedThreaded(const SearchOptions& options, MCVersion version, int threadCount) {
+	ThreadSearchData sharedData;
+	std::vector<std::thread> threads;
+
+	// Calculate seeds per thread
+	uint64_t seedRange = options.seedsToCount;
+	uint64_t seedsPerThread = seedRange / threadCount;
+	hideCursor();
+
+	// Start threads with appropriate seed ranges
+	for (int i = 0; i < threadCount; i++) {
+		uint64_t threadStartSeed = options.startSeed + (i * seedsPerThread);
+		uint64_t threadEndSeed;
+
+		// Make sure the last thread covers any remaining seeds
+		if (i == threadCount - 1) {
+			threadEndSeed = options.startSeed + seedRange;
+		} else {
+			threadEndSeed = threadStartSeed + seedsPerThread;
+		}
+
+		// Launch thread with its seed range
+		threads.push_back(std::thread(seedSearchWorker, threadStartSeed, threadEndSeed, 
+				std::ref(options), version, &sharedData));
+	}
+
+	// Wait for all threads to complete
+	for (auto& thread : threads) {
+		if (thread.joinable()) {
+			thread.join();
+		}
+	}
+
+	// Make sure progress bar is complete
+	if (sharedData.foundSeed != UINT64_MAX) {
+		std::lock_guard<std::mutex> lock(sharedData.progressMutex);
+		printProgressBar(options.seedsToCount, options.seedsToCount);
+	} else {
+		std::lock_guard<std::mutex> lock(sharedData.progressMutex);
+		printProgressBar(sharedData.seedsChecked, options.seedsToCount);
+	}
+
+	showCursor();
+	return sharedData.foundSeed;
 }
