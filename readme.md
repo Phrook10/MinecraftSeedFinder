@@ -13,6 +13,7 @@ A command-line tool for brute-force analyzing Minecraft world seeds using biome 
 - Minecraft version selection via command-line
 - Multithreaded search
 - Rapid searching using JSON
+- Search results are output into a logfile (seed_results.log)
 
 ---
 
@@ -258,16 +259,14 @@ Searching with a seed range of 50,000 may take a few seconds to a couple of minu
 
 ## Other Notes
 
-If your progress bar looks like this: 
-```[ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓ]```
- you need to make sure your terminal is using UTF-8
+- If your progress bar looks like this: ```[ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓ]``` you need to make sure your terminal is using UTF-8.
+- Logfile saves by default to the same folder as the executable.
 
 ---
 
 ## Future Plans
 
 - Configurable search coordinates
-- Exportable search results
 - GUI frontend with seed map visualization
 
 ---

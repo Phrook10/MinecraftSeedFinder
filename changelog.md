@@ -84,6 +84,19 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Refactored command line argument parsing functions into argparser.h/.cpp.
 - Updated the readme.
 
+## [0.1.6] - 2025-05-09
+
+### Added
+- Added logging capabilities. Succesful searches will output or add to seed_results.log.
+
+### Changed
+- Updated the readme.
+
+### Fixed
+- Fixed the search output so all results are displayed after the progress bar.
+- Fixed the search output so biome names are displayed along side the biome ID number.
+
+
 
 
 <!-- TEMPLATE FOR FUTURE VERSIONS

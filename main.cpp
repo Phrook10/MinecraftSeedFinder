@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <iostream>
 #include <algorithm>
 #include <string>
@@ -14,6 +12,7 @@
 using json = nlohmann::json;
 
 int main(int argc, char* argv[]) {
+    
     // Check for help command
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
@@ -30,13 +29,7 @@ int main(int argc, char* argv[]) {
     // Detect available cores and display information
     int availableCores = getAvailableCores();
     std::cout << "Detected " << availableCores << " CPU cores." << std::endl;
-   
-    if (threadCount != availableCores) {
-        std::cout << "Using " << threadCount << " threads for seed searching." << std::endl;
-    } else {
-        std::cout << "Using all available cores for seed searching." << std::endl;
-    }
- 
+    std::cout << "Using " << threadCount << " threads for seed searching." << std::endl;
     std::cout << "Minecraft Seed Finder\n";
     
     // Process input - either from JSON or user interface

@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <utility>
+#include <iostream>
 
 // individual coordinate node
 struct BiomeResult {

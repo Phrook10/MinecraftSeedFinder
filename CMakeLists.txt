@@ -1,11 +1,9 @@
 cmake_minimum_required(VERSION 3.15)
 
-# Set the project name and C++ standard
 project(MinecraftSeedFinder)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-
 
 # Tell CMake to build cubiomes as static lib
 set(BUILD_SHARED_LIBS OFF)

@@ -3,15 +3,20 @@
 #include <string>
 #include <cstdlib>
 
-// Function to parse command line arguments for thread count
 int parseThreadCount(int argc, char* argv[]) {
 	int threadCount = getAvailableCores();
 	for (int i = 1; i < argc; i++) {
 		std::string arg = argv[i];
 		if ((arg == "-t" || arg == "--threads") && i + 1 < argc) {
-			int userThreads = std::stoi(argv[i + 1]);
-			if (userThreads > 0) {
-				threadCount = userThreads;
+			try {
+				int userThreads = std::stoi(argv[i + 1]);
+				if (userThreads > 0) {
+					threadCount = userThreads;
+				}
+			} catch (const std::invalid_argument&) {
+				std::cerr << "Invalid thread count: " << argv[i + 1] << ". Using default value.\n";
+			} catch (const std::out_of_range&) {
+				std::cerr << "Thread count out of range: " << argv[i + 1] << ". Using default value.\n";
 			}
 			++i;
 		}
@@ -19,7 +24,6 @@ int parseThreadCount(int argc, char* argv[]) {
 	return threadCount;
 }
 
-// Function to parse command line arguments for Minecraft version
 MCVersion parseVersionArg(int argc, char* argv[]) {
 	MCVersion version = MC_NEWEST;
 	for (int i = 1; i < argc; i++) {
@@ -32,14 +36,24 @@ MCVersion parseVersionArg(int argc, char* argv[]) {
 	return version;
 }
 
-// Function to parse command line arguments for JSON input file
 bool parseJSONFileArg(int argc, char* argv[], SearchOptions& options) {
 	for (int i = 1; i < argc; i++) {
-		std::string arg = argv[i];
-		if ((arg == "-j" || arg == "--json") && i + 1 < argc) {
-			std::string jsonFilePath = argv[i + 1];
-			return parseJSONInput(jsonFilePath, options);
-		}
+			std::string arg = argv[i];
+			if ((arg == "-j" || arg == "--json") && i + 1 < argc) {
+					std::string jsonFilePath = argv[i + 1];
+					if (jsonFilePath.empty()) {
+							std::cerr << "Error: JSON file path is empty.\n";
+							return false;
+					}
+
+					// Check if the file has a .json extension
+					if (jsonFilePath.substr(jsonFilePath.find_last_of('.') + 1) != "json") {
+							std::cerr << "Error: File is not a valid JSON file.\n";
+							return false;
+					}
+
+					return parseJSONInput(jsonFilePath, options);
+			}
 	}
 	return false;
 }
