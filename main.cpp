@@ -1,63 +1,36 @@
-/*
-* This program is designed to brute force analyze Minecraft world seeds.*
-* Initially it will work for Java Edition, and eventually to some extent*
-* Bedrock edition. A GUI is planned as well.                            *
-*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
 #include <algorithm>
 #include <string>
+#include "argparser.h"
 #include "seedfinder.h"
 #include "config.h"
 #include "interface.h"
 #include "multithreading.h"
 #include "cubiomes/finders.h"
 #include "cubiomes/generator.h"
-
-// Function to parse command line arguments for thread count
-int parseThreadCount(int argc, char* argv[]) {
-    // Default to system-detected core count
-    int threadCount = getAvailableCores();
-    
-    // Check for command line override
-    for (int i = 1; i < argc; i++) {
-        std::string arg = argv[i];
-        if ((arg == "-t" || arg == "--threads") && i + 1 < argc) {
-            int userThreads = std::stoi(argv[i + 1]);
-            if (userThreads > 0) {
-                threadCount = userThreads;
-            }
-            ++i;
-        }
-    }
-    
-    return threadCount;
-}
+#include "include/nlohmann/json.hpp"
+using json = nlohmann::json;
 
 int main(int argc, char* argv[]) {
-    MCVersion version = MC_NEWEST;
-    
-    // Detect available cores
-    int availableCores = getAvailableCores();
-    int threadCount = parseThreadCount(argc, argv);
-    
-    // Simple argument parser
+    // Check for help command
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
-        if ((arg == "-v" || arg == "--version") && i + 1 < argc) {
-            version = parseMCVersion(argv[i + 1]);
-            ++i;
-        }
-        else if ((arg == "-t" || arg == "--threads") && i + 1 < argc) {
-            // Already handled in parseThreadCount
-            ++i;
+        if (arg == "-h" || arg == "--help") {
+            printHelp();
+            return 0;
         }
     }
+
+    // Parse command line arguments
+    int threadCount = parseThreadCount(argc, argv);
+    MCVersion version = parseVersionArg(argc, argv);
     
-    // Display core information
+    // Detect available cores and display information
+    int availableCores = getAvailableCores();
     std::cout << "Detected " << availableCores << " CPU cores." << std::endl;
-    
+   
     if (threadCount != availableCores) {
         std::cout << "Using " << threadCount << " threads for seed searching." << std::endl;
     } else {
@@ -65,19 +38,43 @@ int main(int argc, char* argv[]) {
     }
  
     std::cout << "Minecraft Seed Finder\n";
-    SearchOptions userInput = getInputFromUser();
     
+    // Process input - either from JSON or user interface
+    SearchOptions searchOptions;
+    bool usingJsonInput = parseJSONFileArg(argc, argv, searchOptions);
+    
+    if (!usingJsonInput) {
+        // No JSON file or JSON parsing failed, use interactive mode
+        searchOptions = getInputFromUser();
+    } else {
+        // JSON file was successfully parsed, display summary
+        std::cout << "Loaded search parameters from JSON file:\n";
+        std::cout << "- Starting seed: " << searchOptions.startSeed << "\n";
+        std::cout << "- Seeds to check: " << searchOptions.seedsToCount << "\n";
+        std::cout << "- Constraints: " << searchOptions.constraints.size() << "\n";
+        
+        for (size_t i = 0; i < searchOptions.constraints.size(); i++) {
+            std::cout << "  " << (i+1) << ". Biome ID: " << searchOptions.constraints[i].BiomeID
+                     << ", Max Distance: " << searchOptions.constraints[i].maxDistance << "\n";
+        }
+    }
+   
     std::cout << "Searching Seeds...\n";
-    
+   
     // Use the threaded finder instead of the single-threaded version
-    uint64_t result = findMatchingSeedThreaded(userInput, version, threadCount);
-    
+    uint64_t result = findMatchingSeedThreaded(searchOptions, version, threadCount);
+   
     if (result != UINT64_MAX) {
         std::cout << "\nMatching seed found: " << result << "\n";
     } else {
         std::cout << "\nNo matching seed found in the given range.\n";
     }
-		std::cout << "Press Enter to Exit...\n";
-		std::cin.get();
+    
+    // Only wait for user input if we're not using JSON mode (interactive mode)
+    if (!usingJsonInput) {
+        std::cout << "Press Enter to Exit...\n";
+        std::cin.get();
+    }
+    
     return 0;
 }

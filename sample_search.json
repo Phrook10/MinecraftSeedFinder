@@ -1,0 +1,19 @@
+{
+  "startSeed": 78946168186,
+  "seedsToCount": 25000,
+  "randomizeStartSeed": false,
+  "constraints": [
+    {
+      "biomeID": "jagged_peaks",
+      "maxDistance": 500
+    },
+    {
+      "biomeID": "frozen_ocean",
+      "maxDistance": 1200
+    },
+    {
+      "biomeID": 137,
+      "maxDistance": 400
+    }
+  ]
+}

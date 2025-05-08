@@ -1,4 +1,36 @@
 #include "config.h"
+#include "seedfinder.h"
+#include "include/nlohmann/json.hpp"
+using json = nlohmann::json;
+
+
+void printHelp() {
+  std::cout << "Minecraft Seed Finder - Help\n";
+  std::cout << "-------------------------------\n";
+  std::cout << "Command line options:\n";
+  std::cout << "  -t, --threads N      Set number of threads to use (default: all available cores)\n";
+  std::cout << "  -v, --version VER    Set Minecraft version (default: newest)\n";
+  std::cout << "  -j, --json FILE      Load search parameters from JSON file\n";
+  std::cout << "  -h, --help           Display this help message\n";
+  std::cout << "\n";
+  std::cout << "JSON file format example:\n";
+  std::cout << "{\n";
+  std::cout << "  \"startSeed\": 0,\n";
+  std::cout << "  \"seedsToCount\": 1000,\n";
+  std::cout << "  \"randomizeStartSeed\": false,\n";
+  std::cout << "  \"constraints\": [\n";
+  std::cout << "    {\n";
+  std::cout << "      \"biomeID\": \"jagged_peaks\",\n";
+  std::cout << "      \"maxDistance\": 500\n";
+  std::cout << "    },\n";
+  std::cout << "    {\n";
+  std::cout << "      \"biomeID\": 137,\n";
+  std::cout << "      \"maxDistance\": 300\n";
+  std::cout << "    }\n";
+  std::cout << "  ]\n";
+  std::cout << "}\n";
+}
+
 
 // biome name to ID mapping
 const std::unordered_map<std::string, BiomeID>& getBiomeNameToID() {
@@ -183,4 +215,91 @@ int getAvailableCores() {
     numCores = 1;
   }
   return numCores;
+}
+
+
+// Function to parse JSON input file into SearchOptions struct
+bool parseJSONInput(const std::string& filepath, SearchOptions& options) {
+  
+  const auto& biomeMap = getBiomeNameToID();
+  try {
+      // Read JSON file
+      std::ifstream file(filepath);
+      if (!file.is_open()) {
+          std::cerr << "Error: Unable to open JSON file: " << filepath << std::endl;
+          return false;
+      }
+      
+      json jsonData;
+      file >> jsonData;
+      
+      // Parse startSeed
+      if (jsonData.contains("startSeed")) {
+          options.startSeed = jsonData["startSeed"].get<uint64_t>();
+      }
+      
+      // Parse seedsToCount
+      if (jsonData.contains("seedsToCount")) {
+          options.seedsToCount = jsonData["seedsToCount"].get<uint64_t>();
+      }
+      
+      // Parse randomizeStartSeed
+      if (jsonData.contains("randomizeStartSeed")) {
+          options.randomizeStartSeed = jsonData["randomizeStartSeed"].get<bool>();
+      }
+      
+      // Parse constraints
+      if (jsonData.contains("constraints") && jsonData["constraints"].is_array()) {
+          options.constraints.clear();
+          
+          for (const auto& constraint : jsonData["constraints"]) {
+              BiomeConstraint biomeConstraint;
+              
+              // Check for biomeID (required)
+              if (!constraint.contains("biomeID")) {
+                  std::cerr << "Error: Missing biomeID in constraint" << std::endl;
+                  return false;
+              }
+              
+              // Handle biomeID as either string or integer
+              if (constraint["biomeID"].is_string()) {
+                std::string biomeName = constraint["biomeID"].get<std::string>();
+                auto it = biomeMap.find(biomeName);
+
+                if (it != biomeMap.end()) {
+                  biomeConstraint.BiomeID = it->second;
+                } else {
+                  std::cerr << "Error: Invalid biome name: " << biomeName << std::endl;
+                  return false;
+                }
+              } else if (constraint["biomeID"].is_number()) {
+                biomeConstraint.BiomeID = constraint["biomeID"].get<int>();
+              } else {
+                std::cerr << "Error: biomeID must be a string or number" << std::endl;
+                return false;
+              }
+              
+              // Parse maxDistance (optional)
+              if (constraint.contains("maxDistance")) {
+                  biomeConstraint.maxDistance = constraint["maxDistance"].get<int>();
+              }
+              
+              options.constraints.push_back(biomeConstraint);
+          }
+      }
+      
+      // Validation: ensure we have at least one constraint
+      if (options.constraints.empty()) {
+          std::cerr << "Error: JSON file must contain at least one constraint" << std::endl;
+          return false;
+      }
+      
+      return true;
+  } catch (const json::exception& e) {
+      std::cerr << "JSON parsing error: " << e.what() << std::endl;
+      return false;
+  } catch (const std::exception& e) {
+      std::cerr << "Error parsing JSON file: " << e.what() << std::endl;
+      return false;
+  }
 }

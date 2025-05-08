@@ -52,21 +52,37 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Added default inputs (user can press enter to accept a defult value).
 - Implemented a progress bar.
 
-## [0.1.2] - 2025-04-30
+## [0.1.3] - 2025-04-30
 
 ### Added
 - Added command line argument that allows for the selection of a specific version of minecraft. (Default is MC_NEWEST).
 
 ### Changed
 - Search logic has been modified to make searching faster.
-- Updated the readme
+- Updated the readme.
 
 ### Fixed
 - Corrected the search algorithm, it now searches in a spiral pattern extending outwards from (0,0).
 
+## [0.1.4] - 2025-05-07
 
+### Added
+- Added multithreading for searches.
 
+### Changed
+- Updated the readme.
 
+## [0.1.5] - 2025-05-08
+
+### Added
+- Added command line argument that allows users to specify a json file that contains search options.
+- Added argparser.h/.cpp.
+- Integrated nlohmann/json.hpp to parse json files from the command line.
+- Added a command line help menu that displays the various options, and a json sample template
+
+### Changed
+- Refactored command line argument parsing functions into argparser.h/.cpp.
+- Updated the readme.
 
 
 

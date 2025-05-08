@@ -12,6 +12,17 @@ A command-line tool for brute-force analyzing Minecraft world seeds using biome 
 - Support for common biome names
 - Minecraft version selection via command-line
 - Multithreaded search
+- Rapid searching using JSON
+
+---
+
+## Help Menu
+
+You can access the help menu from the command line by supplying the `-h` flag when launching the program:
+
+```bash
+./seedfinder.exe -h
+```
 
 ---
 
@@ -19,7 +30,7 @@ A command-line tool for brute-force analyzing Minecraft world seeds using biome 
 
 You can choose which Minecraft version's world generation rules to use by supplying the `-v` flag when launching the program:
 
-```
+```bash
 ./seedfinder.exe -v MC_1_20_6
 ```
 
@@ -60,9 +71,60 @@ If no version is supplied, the latest available (`MC_NEWEST`) will be used by de
 
 If `hardware_concurrency()` has trouble detecting a core count, it can be specified manually bby using the `-t` flag when launching the program:
 
-```
+```bash
 ./seedfinder.exe -t 8
 ```
+## JSON Configuration Format
+
+The program supports loading search parameters from a JSON file using the `-j` or `--json` command line option:
+
+```
+./seedfinder -j search_parameters.json
+```
+
+### JSON Format
+
+```json
+{
+  "startSeed": 123456789,       // Starting seed (uint64_t)
+  "seedsToCount": 10000,        // Number of seeds to check (uint64_t)
+  "randomizeStartSeed": false,  // Whether to randomize the starting seed (bool)
+  "constraints": [              // Array of biome constraints
+    {
+      "biomeID": "jagged_peaks",  // Biome name (string) or ID (integer)
+      "maxDistance": 500          // Maximum distance from spawn (integer)
+    },
+    {
+      "biomeID": 137,             // You can use numeric biome IDs as well
+      "maxDistance": 300          // Default is 500 if not specified
+    }
+  ]
+}
+```
+
+### Required Fields
+
+- `constraints`: At least one constraint must be specified.
+  - Each constraint must have a `biomeID` (either as a string name or numeric ID).
+  - `maxDistance` is optional and defaults to 500 if not specified.
+
+### Optional Fields
+
+- `startSeed`: Starting seed for the search (defaults to 0).
+- `seedsToCount`: Number of seeds to check (defaults to 1000).
+- `randomizeStartSeed`: Whether to randomize the starting seed (defaults to false). **NOT YET IMPLEMENTED**
+
+### Example Usage
+
+```bash
+# Use with custom thread count and Minecraft version
+./seedfinder -j my_search.json -t 8 -v 1.18.2
+
+# Just use JSON file with default settings
+./seedfinder -j my_search.json
+```
+- A sample of the json can be found in `sample_search.json`
+- When using a JSON file, the program will bypass the interactive interface and immediately start searching with the provided parameters.
 
 ## Project Structure
 
@@ -70,12 +132,12 @@ If `hardware_concurrency()` has trouble detecting a core count, it can be specif
 .
 ├── CMakeLists.txt         # Project build file
 ├── main.cpp               # Program entry point
-├── config.h               # Biome ID mappings and constants
-├── seedfinder.h/.cpp      # Core biome constraint logic
-├── interface.h/.cpp       # User interface & input/output logic
-├── config.h/.cpp          # Configuration and Enums
+├── argparser.h/.cpp       # Functions for parsing command line arguments
 ├── biomecache.h/.cpp      # Contains logic for caching the seed data
+├── config.h/.cpp          # Configuration and Enums
+├── interface.h/.cpp       # User interface & input/output logic
 ├── multithreading.h/.cpp  # Contains multithreading controls
+├── seedfinder.h/.cpp      # Core biome constraint logic
 └── cubiomes/              # External biome generation engine
 ```
 
