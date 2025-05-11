@@ -3,6 +3,7 @@
 #include <string>
 #include <cstdlib>
 
+
 int parseThreadCount(int argc, char* argv[]) {
 	int threadCount = getAvailableCores();
 	for (int i = 1; i < argc; i++) {
@@ -38,22 +39,45 @@ MCVersion parseVersionArg(int argc, char* argv[]) {
 
 bool parseJSONFileArg(int argc, char* argv[], SearchOptions& options) {
 	for (int i = 1; i < argc; i++) {
-			std::string arg = argv[i];
-			if ((arg == "-j" || arg == "--json") && i + 1 < argc) {
-					std::string jsonFilePath = argv[i + 1];
-					if (jsonFilePath.empty()) {
-							std::cerr << "Error: JSON file path is empty.\n";
-							return false;
-					}
+		std::string arg = argv[i];
+		if ((arg == "-j" || arg == "--json") && i + 1 < argc) {
+			std::string jsonFilePath = argv[++i];
 
-					// Check if the file has a .json extension
-					if (jsonFilePath.substr(jsonFilePath.find_last_of('.') + 1) != "json") {
-							std::cerr << "Error: File is not a valid JSON file.\n";
-							return false;
-					}
-
-					return parseJSONInput(jsonFilePath, options);
+			if (jsonFilePath.empty()) {
+				std::cerr << "Error: JSON file path is empty.\n";
+				exit(EXIT_FAILURE);
 			}
+
+			if (jsonFilePath.substr(jsonFilePath.find_last_of('.') + 1) != "json") {
+				std::cerr << "Error: File '" << jsonFilePath << "' is not a valid JSON file.\n";
+				exit(EXIT_FAILURE);
+			}
+
+			if (!parseJSONInput(jsonFilePath, options)) {
+				std::cerr << "Error: Failed to parse JSON file '" << jsonFilePath << "'.\n";
+				exit(EXIT_FAILURE);
+			}
+
+			return true;
+		}
 	}
 	return false;
+}
+
+void parseSearchModeArg(int argc, char* argv[], SearchOptions& options) {
+	for (int i = 1; i < argc; ++i) {
+		std::string arg = argv[i];
+		if ((arg == "-m" || arg == "--mode") && i + 1 < argc) {
+			std::string mode = argv[++i];
+
+			if (mode == "SINGLE_MATCH") {
+				options.searchMode = SINGLE_MATCH;
+			} else if (mode == "ALL_MATCHES") {
+				options.searchMode = ALL_MATCHES;
+			} else {
+				std::cerr << "Error: Invalid search mode '" << mode << "'. Valid modes are SINGLE_MATCH, ALL_MATCHES.\n";
+				exit(EXIT_FAILURE);
+			}
+		}
+	}
 }

@@ -26,6 +26,12 @@ struct SeedMatchResult {
     std::unordered_map<int, std::string> biomeNames; 
 };
 
+// enum for mode selection
+enum SearchMode {
+	SINGLE_MATCH,
+	ALL_MATCHES
+};
+
 // groups all constraints and options together
 struct SearchOptions {
     uint64_t startSeed = 0;
@@ -33,6 +39,7 @@ struct SearchOptions {
     bool randomizeStartSeed = false;
     std::vector<BiomeConstraint> constraints;
     std::string logFilePath = "seed_results.log";
+    SearchMode searchMode = ALL_MATCHES;
 };
 
 // Struct for thread data sharing

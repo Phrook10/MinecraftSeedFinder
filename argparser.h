@@ -8,5 +8,6 @@
 int parseThreadCount(int argc, char* argv[]);
 MCVersion parseVersionArg(int argc, char* argv[]);
 bool parseJSONFileArg(int argc, char* argv[], SearchOptions& options);
+void parseSearchModeArg(int argc, char* argv[], SearchOptions& options);
 
 #endif

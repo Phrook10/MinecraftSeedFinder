@@ -11,6 +11,7 @@ void printHelp() {
   std::cout << "  -t, --threads N      Set number of threads to use (default: all available cores)\n";
   std::cout << "  -v, --version VER    Set Minecraft version (default: newest)\n";
   std::cout << "  -j, --json FILE      Load search parameters from JSON file\n";
+  std::cout << "  -m, --mode           Set the search mode (SINGLE_MATCH, ALL_MATCHES)";
   std::cout << "  -h, --help           Display this help message\n";
   std::cout << "\n";
   std::cout << "JSON file format example:\n";

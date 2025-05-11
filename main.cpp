@@ -22,9 +22,12 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    SearchOptions searchOptions;
+
     // Parse command line arguments
     int threadCount = parseThreadCount(argc, argv);
     MCVersion version = parseVersionArg(argc, argv);
+    parseSearchModeArg(argc, argv, searchOptions);
     
     // Detect available cores and display information
     int availableCores = getAvailableCores();
@@ -33,12 +36,11 @@ int main(int argc, char* argv[]) {
     std::cout << "Minecraft Seed Finder\n";
     
     // Process input - either from JSON or user interface
-    SearchOptions searchOptions;
     bool usingJsonInput = parseJSONFileArg(argc, argv, searchOptions);
     
     if (!usingJsonInput) {
         // No JSON file or JSON parsing failed, use interactive mode
-        searchOptions = getInputFromUser();
+        searchOptions = getInputFromUser(searchOptions);
     } else {
         // JSON file was successfully parsed, display summary
         std::cout << "Loaded search parameters from JSON file:\n";

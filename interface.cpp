@@ -101,11 +101,11 @@ static void setCursorVisibility(bool visible) {
 // ----- public functions -----
 
 // Gets input from the user
-SearchOptions getInputFromUser() {
+SearchOptions getInputFromUser(SearchOptions &searchOptions) {
 
-	SearchOptions searchOptions;
+	//SearchOptions searchOptions;
 
-	// get starting seed (default = 0)
+	std::cout << "Search mode: " << searchOptions.searchMode << std::endl;
 	std::cout << "Enter starting seed (default = 0): ";
 	searchOptions.startSeed = getSeedFromUser(searchOptions.startSeed);
 	std::cout << "Enter seed range (default = 1000): ";

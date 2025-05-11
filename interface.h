@@ -5,7 +5,7 @@
 #include "seedfinder.h"
 
 // user input related functions
-SearchOptions getInputFromUser();                                                                     // gets input from user and returns a SearchOptions vector
+SearchOptions getInputFromUser(SearchOptions &searchOptions);                                         // gets input from user and returns a SearchOptions vector
 
 // Progress bar related functions
 void printProgressBar(long long current, long long total);                                            // visual feedback, displays the progress of the search

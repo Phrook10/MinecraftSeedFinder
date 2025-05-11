@@ -96,7 +96,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Fixed the search output so all results are displayed after the progress bar.
 - Fixed the search output so biome names are displayed along side the biome ID number.
 
+## [0.1.7] - 2025-05-11
 
+### Added:
+- Added a command line argument to allow for single match, or all matches modes.
+
+### Changed:
+- Updates the readme.
 
 
 <!-- TEMPLATE FOR FUTURE VERSIONS

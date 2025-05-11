@@ -70,11 +70,21 @@ If no version is supplied, the latest available (`MC_NEWEST`) will be used by de
 
 ## Multithreading
 
-If `hardware_concurrency()` has trouble detecting a core count, it can be specified manually bby using the `-t` flag when launching the program:
+If `hardware_concurrency()` has trouble detecting a core count, it can be specified manually by using the `-t` flag when launching the program:
 
 ```bash
 ./seedfinder.exe -t 8
 ```
+---
+## Match Mode Setting
+
+The program supports changing how the ouput is delivered. Users can select single match mode, or all match mode. Single match will return a single match (which one depends on the thread that finds a match first). All Matches will return all the matches in a search. options are `SINGLE_MATCH`, `ALL_MATCHES`. The default is `ALL_MATCHES`. The mode can be specified by using the `-m` flag when launching the program:
+
+```bash
+./seedfinder.exe -m FIRST_MATCH
+```
+---
+
 ## JSON Configuration Format
 
 The program supports loading search parameters from a JSON file using the `-j` or `--json` command line option:
@@ -261,6 +271,7 @@ Searching with a seed range of 50,000 may take a few seconds to a couple of minu
 
 - If your progress bar looks like this: ```[ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓ]``` you need to make sure your terminal is using UTF-8.
 - Logfile saves by default to the same folder as the executable.
+- Single match mode returns a single match, not necessarily the first match in the seed sequence. 
 
 ---
 
