@@ -1,7 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include <iomanip>
-#include <windows.h>
+//#include <windows.h>
 #include "interface.h"
 #include "seedfinder.h"
 #include "config.h"
