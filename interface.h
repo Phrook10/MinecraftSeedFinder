@@ -9,7 +9,7 @@ SearchOptions getInputFromUser(SearchOptions &searchOptions);                   
 
 // Progress bar related functions
 void printProgressBar(long long current, long long total);                                            // visual feedback, displays the progress of the search
-void hideCursor();                                                                                    // hides the cursor to prevent flickering during progress bar updates
-void showCursor();                                                                                    // unhides the cursor once the search is complete
+// void hideCursor();                                                                                    // hides the cursor to prevent flickering during progress bar updates
+// void showCursor();                                                                                    // unhides the cursor once the search is complete
 
 #endif

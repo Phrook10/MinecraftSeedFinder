@@ -87,15 +87,16 @@ static int getBiomeMaxDistanceFromUser(int defaultBiomeMaxDistance) {
 	return static_cast<int>(signedInput);
 }
 
-// provides the mechanism that hideCursor and showCursor use.
-static void setCursorVisibility(bool visible) {
-	HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
-	CONSOLE_CURSOR_INFO cursorInfo;
+//--THIS IS WINDOWS SPECIFIC--
+// provides the mechanism that hideCursor and showCursor use. 
+// static void setCursorVisibility(bool visible) {
+// 	HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+// 	CONSOLE_CURSOR_INFO cursorInfo;
 
-	GetConsoleCursorInfo(out, &cursorInfo);
-	cursorInfo.bVisible = visible;
-	SetConsoleCursorInfo(out, &cursorInfo);
-}
+// 	GetConsoleCursorInfo(out, &cursorInfo);
+// 	cursorInfo.bVisible = visible;
+// 	SetConsoleCursorInfo(out, &cursorInfo);
+// }
 
 
 // ----- public functions -----
@@ -165,11 +166,11 @@ void printProgressBar(long long current, long long total) {
 }
 
 // Cursor hiding functions
+// See setCursorVisibility()
+// void hideCursor() {
+// 	setCursorVisibility(false);
+// }
 
-void hideCursor() {
-	setCursorVisibility(false);
-}
-
-void showCursor() {
-	setCursorVisibility(true);
-}
+// void showCursor() {
+// 	setCursorVisibility(true);
+// }

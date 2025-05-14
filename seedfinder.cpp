@@ -93,7 +93,7 @@ uint64_t findMatchingSeed(const SearchOptions& options, MCVersion version) {
     Generator g;
     setupGenerator(&g, version, 0);
     
-    hideCursor();
+    // hideCursor();
     
     std::vector<SeedMatchResult> matchingSeeds;
     
@@ -117,7 +117,7 @@ uint64_t findMatchingSeed(const SearchOptions& options, MCVersion version) {
         }
     }
     
-    showCursor();
+    // showCursor();
     
     // Print results at the end
     if (!matchingSeeds.empty()) {
@@ -215,7 +215,7 @@ uint64_t findMatchingSeedThreaded(const SearchOptions& options, MCVersion versio
 
 	uint64_t seedRange = options.seedsToCount;
 	uint64_t seedsPerThread = seedRange / threadCount;
-	hideCursor();
+	// hideCursor();
 
 	for (int i = 0; i < threadCount; i++) {
 		uint64_t threadStartSeed = options.startSeed + (i * seedsPerThread);
@@ -241,7 +241,7 @@ uint64_t findMatchingSeedThreaded(const SearchOptions& options, MCVersion versio
     }
 
 
-	showCursor();
+	// showCursor();
 
 	if (options.searchMode == SINGLE_MATCH && sharedData.seedFound) {
 		printf("\nFirst matching seed found: %" PRId64 "\n", (int64_t)sharedData.foundSeed);

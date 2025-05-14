@@ -1,5 +1,6 @@
 #ifndef SEEDFINDER_H
 #define SEEDFINDER_H
+
 #include <vector>
 #include <cstdint>
 #include <string>

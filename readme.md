@@ -269,7 +269,12 @@ Searching with a seed range of 50,000 may take a few seconds to a couple of minu
 
 ## Other Notes
 
-- If your progress bar looks like this: ```[ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓ]``` you need to make sure your terminal is using UTF-8.
+- If your progress bar looks like this: ```[ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓ]``` you need to make sure your terminal is using UTF-8. In a Windows CMD terminal you can use:
+ 
+  ```bash
+  chcp 65001
+  ```
+
 - Logfile saves by default to the same folder as the executable.
 - Single match mode returns a single match, not necessarily the first match in the seed sequence. 
 
