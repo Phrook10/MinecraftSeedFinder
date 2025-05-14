@@ -17,6 +17,16 @@ A command-line tool for brute-force analyzing Minecraft world seeds using biome 
 
 ---
 
+### Non-Windows Branch: v0.1.7-exp
+
+The `v0.1.7-exp` branch is a platform-specific version of the project intended for non-Windows systems.  
+- Adjustments have been made to remove dependencies on `<windows.h>` and related Windows-specific functions.  
+- The cursor visibility functions have been removed, and subsequently the progress bar looks strange.   
+
+This branch will not be merged into the mainline until a unified cross-platform implementation is achieved.
+
+---
+
 ## Help Menu
 
 You can access the help menu from the command line by supplying the `-h` flag when launching the program:
